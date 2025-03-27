@@ -20,6 +20,8 @@ env:
   YC_ZONE: ${{ secrets.YC_ZONE }}
   KITTYGRAM_USER: ${{ secrets.KITTYGRAM_USER }}
   KITTYGRAM_SSH: ${{ secrets.KITTYGRAM_SSH }}
+  STATIC_KEY_ID: ${{ secrets.STATIC_KEY_ID }}
+  STATIC_KEY: ${{ secrets.STATIC_KEY }}
 
 jobs:
   plan:
@@ -49,9 +51,22 @@ jobs:
         sudo apt update
         sudo apt-get install terraform -y
 
+    - name: Configure mirror
+      working-directory: ~
+      run: |
+        echo "provider_installation {
+          network_mirror {
+            url = "https://terraform-mirror.yandexcloud.net/"
+            include = ["registry.terraform.io/*/*"]
+          }
+          direct {
+            exclude = ["registry.terraform.io/*/*"]
+          }
+        }" >> .terraformrc
+
     - name: Run terraform init
       working-directory: ./infra
-      run: terraform init
+      run: terraform init -backend-config="access_key=$STATIC_KEY_ID" -backend-config="secret_key=$STATIC_KEY"
 
     - name: Run terraform plan
       working-directory: ./infra
