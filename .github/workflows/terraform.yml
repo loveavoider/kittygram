@@ -78,12 +78,12 @@ jobs:
       working-directory: ./infra
       if: ${{ github.event.inputs.action == 'apply' }}
       run: |
-        terraform apply -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
+        terraform apply -auto-approve -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
         -var "YC_ZONE=$YC_ZONE" -var "KITTYGRAM_USER=$KITTYGRAM_USER" -var "KITTYGRAM_SSH=$KITTYGRAM_SSH"
 
     - name: Terraform Destroy
       working-directory: ./infra
       if: ${{ github.event.inputs.action == 'destroy' }}
       run: |
-        terraform destroy -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
+        terraform destroy -auto-approve -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
         -var "YC_ZONE=$YC_ZONE" -var "KITTYGRAM_USER=$KITTYGRAM_USER" -var "KITTYGRAM_SSH=$KITTYGRAM_SSH"
