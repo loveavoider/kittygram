@@ -61,18 +61,22 @@ resource "yandex_vpc_security_group" "web_sg" {
     description       = "Allow SSH"
     protocol          = "TCP"
     port              = 22
+    v4_cidr_blocks    = ["0.0.0.0/0"]
   }
 
   ingress {
     description       = "Allow HTTP"
     protocol          = "TCP"
     port              = 80
+    v4_cidr_blocks    = ["0.0.0.0/0"]
   }
 
   egress {
     description       = "Permit ANY"
     protocol          = "ANY"
     v4_cidr_blocks    = ["0.0.0.0/0"]
+    from_port         = 0
+    to_port           = 65535
   }
 }
 
@@ -143,5 +147,6 @@ runcmd:
 
 resource "yandex_storage_bucket" "image_storage" {
   bucket     = "evgen-storage-${var.YC_FOLDER_ID}"
+  folder_id = "${var.YC_FOLDER_ID}"
   max_size = 1073741824
 }
