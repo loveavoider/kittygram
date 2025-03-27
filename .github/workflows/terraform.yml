@@ -71,8 +71,8 @@ jobs:
     - name: Run terraform plan
       working-directory: ./infra
       run: |
-        terraform plan -var YC_TOKEN=$YC_TOKEN YC_CLOUD_ID=$YC_CLOUD_ID YC_FOLDER_ID=$YC_FOLDER_ID \
-        YC_ZONE=$YC_ZONE KITTYGRAM_USER=$KITTYGRAM_USER KITTYGRAM_SSH=$KITTYGRAM_SSH
+        terraform plan -var YC_TOKEN=$YC_TOKEN -var YC_CLOUD_ID=$YC_CLOUD_ID -var YC_FOLDER_ID=$YC_FOLDER_ID \
+        -var YC_ZONE=$YC_ZONE -var KITTYGRAM_USER=$KITTYGRAM_USER -var KITTYGRAM_SSH=$KITTYGRAM_SSH
 
   # apply:
   #   runs-on: ubuntu-latest
