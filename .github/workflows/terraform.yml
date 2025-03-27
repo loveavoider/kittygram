@@ -49,6 +49,10 @@ jobs:
         sudo apt update
         sudo apt-get install terraform -y
 
+    - name: Run terraform init
+      working-directory: ./infra
+      run: terraform init
+
     - name: Run terraform plan
       working-directory: ./infra
       run: terraform plan
