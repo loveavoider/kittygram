@@ -8,10 +8,10 @@ terraform {
 
   backend "s3" {
     endpoints = {
-        s3 = "https://storage.yandexcloud.net"
+      s3 = "https://storage.yandexcloud.net"
     }
 
-    bucket = "evgen-storage-${var.YC_FOLDER_ID}"
+    bucket = "terraform-bucket-evg"
     region = "ru-central1"
     key    = "tf-state.tfstate"
 
