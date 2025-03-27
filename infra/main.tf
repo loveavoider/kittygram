@@ -1,4 +1,28 @@
 # Настройка провайдера
+variable "YC_TOKEN" {
+  type = string
+}
+
+variable "YC_CLOUD_ID" {
+  type = string
+}
+
+variable "YC_FOLDER_ID" {
+  type = string
+}
+
+variable "YC_ZONE" {
+  type = string
+}
+
+variable "KITTYGRAM_USER" {
+  type = string
+}
+
+variable "KITTYGRAM_SSH" {
+  type = string
+}
+
 terraform {
   required_providers {
     yandex = {
@@ -31,6 +55,7 @@ provider "yandex" {
 
 resource "yandex_vpc_security_group" "web_sg" {
   name                = "web-sg"
+  network_id          = "${yandex_vpc_network.network-1.id}"
 
   ingress {
     description       = "Allow SSH"
@@ -118,6 +143,6 @@ runcmd:
 }
 
 resource "yandex_storage_bucket" "image_storage" {
-  name     = "evgen-storage-${var.YC_FOLDER_ID}"
+  bucket     = "evgen-storage-${var.YC_FOLDER_ID}"
   max_size = 1073741824
 }
