@@ -27,7 +27,6 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     name: Terraform Plan
-    if: ${{ github.event.inputs.action == 'plan' }}
 
     steps:
     - name: Check out code
@@ -70,24 +69,21 @@ jobs:
 
     - name: Run terraform plan
       working-directory: ./infra
+      if: ${{ github.event.inputs.action == 'plan' }}
       run: |
         terraform plan -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
         -var "YC_ZONE=$YC_ZONE" -var "KITTYGRAM_USER=$KITTYGRAM_USER" -var "KITTYGRAM_SSH=$KITTYGRAM_SSH"
 
-  # apply:
-  #   runs-on: ubuntu-latest
+    - name: Terraform Apply
+      working-directory: ./infra
+      if: ${{ github.event.inputs.action == 'apply' }}
+      run: |
+        terraform apply -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
+        -var "YC_ZONE=$YC_ZONE" -var "KITTYGRAM_USER=$KITTYGRAM_USER" -var "KITTYGRAM_SSH=$KITTYGRAM_SSH"
 
-  #   steps:
-  #   - name: Terraform Apply
-  #   working-directory: ./infra
-  #   if: ${{ github.event.inputs.action == 'apply' }}
-  #   run: terraform apply
-
-  # destroy:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Terraform Destroy
-  #   working-directory: ./infra
-  #   if: ${{ github.event.inputs.action == 'destroy' }}
-  #   run: terraform destroy
+    - name: Terraform Destroy
+      working-directory: ./infra
+      if: ${{ github.event.inputs.action == 'destroy' }}
+      run: |
+        terraform destroy -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
+        -var "YC_ZONE=$YC_ZONE" -var "KITTYGRAM_USER=$KITTYGRAM_USER" -var "KITTYGRAM_SSH=$KITTYGRAM_SSH"
