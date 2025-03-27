@@ -1,4 +1,4 @@
-name: Terraform
+name: "Terraform"
 
 on:
   workflow_dispatch:
@@ -23,11 +23,15 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-latest
+    name: Terraform Plan
+    if: ${{ github.event.inputs.action == 'plan' }}
 
     steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+  
     - name: Terraform Plan
     working-directory: ./infra
-    if: ${{ github.event.inputs.action == 'plan' }}
     run: terraform plan
 
   apply:
