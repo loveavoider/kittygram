@@ -6,6 +6,7 @@ on:
         description: 'Run deploy'
         required: true
         default: 'run'
+        type: choice
         options:
           - run
 
