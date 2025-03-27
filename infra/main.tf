@@ -109,7 +109,6 @@ resource "yandex_compute_instance" "vm" {
   }
 
   metadata = {
-    ssh-keys = "${var.KITTYGRAM_USER}:${KITTYGRAM_SSH}"
     user-data = <<-EOF
 datasource:
   Ec2:
