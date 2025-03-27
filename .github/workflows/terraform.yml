@@ -34,20 +34,20 @@ jobs:
     working-directory: ./infra
     run: terraform plan
 
-  apply:
-    runs-on: ubuntu-latest
+  # apply:
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Terraform Apply
-    working-directory: ./infra
-    if: ${{ github.event.inputs.action == 'apply' }}
-    run: terraform apply
+  #   steps:
+  #   - name: Terraform Apply
+  #   working-directory: ./infra
+  #   if: ${{ github.event.inputs.action == 'apply' }}
+  #   run: terraform apply
 
-  destroy:
-    runs-on: ubuntu-latest
+  # destroy:
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Terraform Destroy
-    working-directory: ./infra
-    if: ${{ github.event.inputs.action == 'destroy' }}
-    run: terraform destroy
+  #   steps:
+  #   - name: Terraform Destroy
+  #   working-directory: ./infra
+  #   if: ${{ github.event.inputs.action == 'destroy' }}
+  #   run: terraform destroy
