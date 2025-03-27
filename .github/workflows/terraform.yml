@@ -1,0 +1,49 @@
+name: Terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Select the Terraform action'
+        required: true
+        default: 'plan'
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  YC_TOKEN: ${{ secrets.YC_TOKEN }}
+  YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+  YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+  YC_ZONE: ${{ secrets.YC_ZONE }}
+  KITTYGRAM_USER: ${{ secrets.KITTYGRAM_USER }}
+  KITTYGRAM_SSH: ${{ secrets.KITTYGRAM_SSH }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Terraform Plan
+    working-directory: ./infra
+    if: ${{ github.event.inputs.action == 'plan' }}
+    run: terraform plan
+
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Terraform Apply
+    working-directory: ./infra
+    if: ${{ github.event.inputs.action == 'apply' }}
+    run: terraform apply
+
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Terraform Destroy
+    working-directory: ./infra
+    if: ${{ github.event.inputs.action == 'destroy' }}
+    run: terraform destroy

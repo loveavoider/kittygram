@@ -1,0 +1,123 @@
+# Настройка провайдера
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+
+  backend "s3" {
+    endpoints = {
+        s3 = "https://storage.yandexcloud.net"
+    }
+
+    bucket = "evgen-storage-${var.YC_FOLDER_ID}"
+    region = "ru-central1"
+    key    = "tf-state.tfstate"
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+  }
+}
+
+provider "yandex" {
+  token     = var.YC_TOKEN
+  cloud_id  = var.YC_CLOUD_ID
+  folder_id = var.YC_FOLDER_ID
+  zone      = var.YC_ZONE
+}
+
+resource "yandex_vpc_security_group" "web_sg" {
+  name                = "web-sg"
+
+  ingress {
+    description       = "Allow SSH"
+    protocol          = "TCP"
+    port              = 22
+  }
+
+  ingress {
+    description       = "Allow HTTP"
+    protocol          = "TCP"
+    port              = 80
+  }
+
+  egress {
+    description       = "Permit ANY"
+    protocol          = "ANY"
+    v4_cidr_blocks    = ["0.0.0.0/0"]
+  }
+}
+
+# Создание сети
+resource "yandex_vpc_network" "network-1" {
+  name = "network1"
+}
+
+resource "yandex_vpc_subnet" "subnet-1" {
+  name           = "subnet1"
+  zone           = "${var.YC_ZONE}"
+  v4_cidr_blocks = ["192.168.10.0/24"]
+  network_id     = "${yandex_vpc_network.network-1.id}"
+}
+
+resource "yandex_compute_instance" "vm" {
+  name = "terraform-vm"
+
+  resources {
+    cores  = 2
+    memory = 2
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd87va5cc00gaq2f5qfb" # Ubuntu 20.04 LTS
+    }
+  }
+
+  network_interface {
+    subnet_id = "${yandex_vpc_subnet.subnet-1.id}"
+    security_group_ids = [yandex_vpc_security_group.web_sg.id]
+    nat       = true
+  }
+
+  metadata = {
+    ssh-keys = "${var.KITTYGRAM_USER}:${KITTYGRAM_SSH}"
+    user-data = <<-EOF
+datasource:
+  Ec2:
+    strict_id: false
+ssh_pwauth: no
+users:
+- name: ${var.KITTYGRAM_USER}
+  sudo: "ALL=(ALL) NOPASSWD:ALL"
+  shell: /bin/bash
+  ssh_authorized_keys:
+  - ${var.KITTYGRAM_SSH}
+write_files:
+  - path: "/usr/local/etc/docker-start.sh"
+    permissions: "755"
+    content: |
+      #!/bin/bash
+
+      # Docker
+      echo "Installing Docker"
+      sudo apt-get update
+      sudo install -m 0755 -d /etc/apt/keyrings
+      sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+      sudo chmod a+r /etc/apt/keyrings/docker.asc
+      sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+      defer: true
+runcmd:
+  - [su, ${var.KITTYGRAM_USER}, -c, "/usr/local/etc/docker-start.sh"]
+    EOF
+  }
+}
+
+resource "yandex_storage_bucket" "image_storage" {
+  name     = "evgen-storage-${var.YC_FOLDER_ID}"
+  max_size = 1073741824
+}
