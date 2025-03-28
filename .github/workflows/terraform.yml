@@ -80,7 +80,7 @@ jobs:
       if: ${{ github.event.inputs.action == 'apply' }}
       run: |
         terraform apply -auto-approve -var "YC_TOKEN=$YC_TOKEN" -var "YC_CLOUD_ID=$YC_CLOUD_ID" -var "YC_FOLDER_ID=$YC_FOLDER_ID" \
-        -var "YC_ZONE=$YC_ZONE" -var "KITTYGRAM_USER=$KITTYGRAM_USER" -var "KITTYGRAM_SSH=$KITTYGRAM_SSH" -var "TF_LOG=$TF_LOG"
+        -var "YC_ZONE=$YC_ZONE" -var "KITTYGRAM_USER=$KITTYGRAM_USER" -var "KITTYGRAM_SSH=$KITTYGRAM_SSH"
 
     - name: Terraform Destroy
       working-directory: ./infra
