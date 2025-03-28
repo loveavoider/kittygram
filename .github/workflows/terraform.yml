@@ -22,7 +22,6 @@ env:
   KITTYGRAM_SSH: ${{ secrets.KITTYGRAM_SSH }}
   STATIC_KEY_ID: ${{ secrets.STATIC_KEY_ID }}
   STATIC_KEY: ${{ secrets.STATIC_KEY }}
-  TF_LOG: "DEBUG"
 
 jobs:
   plan:

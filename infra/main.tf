@@ -104,7 +104,7 @@ resource "yandex_compute_instance" "vm" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd87va5cc00gaq2f5qfb" # Ubuntu 20.04 LTS
+      image_id = "fd8ou6hurlbfqmi57ofd"
     }
   }
 
