@@ -121,11 +121,11 @@ datasource:
     strict_id: false
 ssh_pwauth: no
 users:
-- name: ${var.KITTYGRAM_USER}
-  sudo: "ALL=(ALL) NOPASSWD:ALL"
-  shell: /bin/bash
-  ssh_authorized_keys:
-  - ${var.KITTYGRAM_SSH}
+  - name: ${var.KITTYGRAM_USER}
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${var.KITTYGRAM_SSH}
 write_files:
   - path: "/usr/local/etc/docker-start.sh"
     permissions: "755"
