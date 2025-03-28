@@ -26,7 +26,7 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    name: Terraform Plan
+    name: Terraform ${{ github.event.inputs.action }}
 
     steps:
     - name: Check out code

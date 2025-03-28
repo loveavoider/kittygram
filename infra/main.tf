@@ -35,9 +35,9 @@ terraform {
       s3 = "https://storage.yandexcloud.net"
     }
 
-    bucket = "terraform-bucket-evg"
+    bucket = "terraform-state-evgen"
     region = "ru-central1"
-    key    = "tf-state.tfstate"
+    key    = "terraform/tf-state.tfstate"
 
     skip_region_validation      = true
     skip_credentials_validation = true
